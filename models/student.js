@@ -52,9 +52,10 @@ const studentSchema = new mongoose.Schema({
         type:ObjectId,ref:"SchoolCalendar"
     },
     bookList:[],
-    attendance:[{
+    notification:[{
+        sender:{type:ObjectId,ref:"User"},
         timestamp:{type:String},
-        calendar:{type:ObjectId,ref:"SchoolCalendar"}
+        notice:{type:String},
     }],
     followers:[{type:ObjectId,ref:"User"}],
     following:[{type:ObjectId,ref:"User"}]

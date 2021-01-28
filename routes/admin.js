@@ -3,6 +3,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const Student = require('../models/student')
 const Staff = require('../models/staff')
+const Admin = require('../models/admin')
 const StaffAttendance = require('../models/staffAttendance')
 const Result = require('../models/result')
 const requireLogin = require('../middleware/requireLogin')
@@ -11,6 +12,50 @@ const bcrypt = require('bcryptjs')
 const Calendar = require('../models/schoolCalendar')
 const StaffDuty = require('../models/staffDuty')
 const result = require('../models/result')
+
+
+//get admin notification
+router.get('/admin',(req,res)=>{
+    Admin.find()
+    .select('_id notification')
+    .then(notice=>{
+     const notification = (notice[0])
+        res.json(notification.notification)
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+})
+
+//update admin notification
+
+router.put('/admin/updatenotification',requireLogin,(req,res)=>{
+    Admin.findOne({})
+    .select('_id notification')
+    .then(notice=>{
+        const notification = (notice.notification)
+           //res.json(notification.notification)
+           for (let i=0; i <notification.length; i++){
+            notification[i].seen = true
+            
+        }
+        Admin.findOneAndUpdate({},{
+            $set:{notification}
+        },{new:true})
+        .select('_id notification')
+        .then(notice=>{
+            res.json(notice.notification)
+        })
+        .catch(err=>{
+            return res.status(422).json({error:'could not update photo'})
+        })
+
+    })
+    .catch(err=>{
+        return res.status(422).json({error:'could not update photo'})
+    })
+   
+})
 
 //get All staff
 router.get('/admin/stafflist',(req,res)=>{

@@ -68,13 +68,14 @@ router.post('/student/register',(req,res)=>{
 
 //Student Signin
 router.post('/student/signin',(req,res)=>{
-   
+  
     const {email,password,phone} = req.body;
     if((!email&&!phone)||!password){
        return res.status(422).json({error:'please add email or password'})
     }
     if(email){
         Student.findOne({email:email})
+        .populate('calendar', 'year term week')
         .then(savedstudent=>{
             if(!savedstudent){
                return res.status(422).json({error:'Invalid email or password'})
@@ -84,8 +85,9 @@ router.post('/student/signin',(req,res)=>{
                 if(doMatch){
                     //res.json({message:'Successfully Signed In'})
                     const token = jwt.sign({_id:savedstudent._id},process.env.jwt)
-                    const {_id,name,email,photo}=savedstudent
-                    res.json({token,student:{_id, name,email,photo}})
+                    
+                    const {_id,name,email,photo,section,DOB,stdClass,sex,stateOfOrigin,parentName,occupation,phone,calendar}=savedstudent
+                    res.json({token,student:{_id,name,email,photo,section,DOB,stdClass,sex,stateOfOrigin,parentName,occupation,phone,calendar}})
                 }else{
                     return res.status(422).json({error:'Invalid Email or password'})
                 }
@@ -99,6 +101,7 @@ router.post('/student/signin',(req,res)=>{
     }else if(phone){
 
     Student.findOne({phone:phone})
+    .populate('calendar', 'year term week')
     .then(savedstudent=>{
         if(!savedstudent){
            return res.status(422).json({error:'Invalid email or password'})
@@ -108,8 +111,8 @@ router.post('/student/signin',(req,res)=>{
             if(doMatch){
                 //res.json({message:'Successfully Signed In'})
                 const token = jwt.sign({_id:savedstudent._id},process.env.jwt)
-                const {_id,name,email,photo}=savedstudent
-                res.json({token,student:{_id, name,email,photo}})
+                const {_id,name,email,photo,section,DOB,stdClass,sex,stateOfOrigin,parentName,occupation,phone,calendar}=savedstudent
+                res.json({token,student:{_id,name,email,photo,section,DOB,stdClass,sex,stateOfOrigin,parentName,occupation,phone,calendar}})
             }else{
                 return res.status(422).json({error:'Invalid Email or password'})
             }
@@ -141,8 +144,8 @@ router.post('/staff/signin',(req,res)=>{
                 if(doMatch){
                     //res.json({message:'Successfully Signed In'})
                     const token = jwt.sign({_id:savedstaff._id},process.env.jwt)
-                    const {_id,name,email,students,attendance,photo}=savedstaff
-                    res.json({token,staff:{_id, name,email,students,attendance,photo}})
+                    const {_id,name,email,isAdmin,isStaff,photo}=savedstaff
+                    res.json({token,staff:{_id, name,email,isAdmin,isStaff,photo}})
                 }else{
                     return res.status(422).json({error:'Invalid Email or password'})
                 }
@@ -165,8 +168,8 @@ router.post('/staff/signin',(req,res)=>{
             if(doMatch){
                 //res.json({message:'Successfully Signed In'})
                 const token = jwt.sign({_id:savedstaff._id},process.env.jwt)
-                const {_id,name,email,students,attendance,photo}=savedstaff
-                res.json({token,staff:{_id, name,email,students,attendance,photo}})
+                const {_id,name,email,isAdmin,isStaff,photo}=savedstaff
+                res.json({token,staff:{_id, name,email,isAdmin,isStaff,photo}})
             }else{
                 return res.status(422).json({error:'Invalid Email or password'})
             }
@@ -301,8 +304,8 @@ router.post('/admin/signin',(req,res)=>{
                 if(doMatch){
                     //res.json({message:'Successfully Signed In'})
                     const token = jwt.sign({_id:savedadmin._id},process.env.jwt)
-                    const {_id,name,email,photo}=savedadmin
-                    res.json({token,admin:{_id, name,email,photo}})
+                    const {_id,name,email,photo,isAdmin}=savedadmin
+                    res.json({token,admin:{_id, name,email,photo,isAdmin}})
                 }else{
                     return res.status(422).json({error:'Invalid Email or password'})
                 }
@@ -325,8 +328,8 @@ router.post('/admin/signin',(req,res)=>{
             if(doMatch){
                 //res.json({message:'Successfully Signed In'})
                 const token = jwt.sign({_id:savedadmin._id},process.env.jwt)
-                const {_id,name,email,photo}=savedadmin
-                res.json({token,admin:{_id, name,email,photo}})
+                const {_id,name,email,isAdmin,photo}=savedadmin
+                res.json({token,admin:{_id, name,email,photo,isAdmin}})
             }else{
                 return res.status(422).json({error:'Invalid Email or password'})
             }

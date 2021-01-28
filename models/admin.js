@@ -22,6 +22,12 @@ const adminSchema = new mongoose.Schema({
         type:String,
         default:"https://res.cloudinary.com/jossyjoe/image/upload/v1606258324/UserIcon_tmu1v6.jpg"
     },
+    notification:[{
+        seen:{ type: Boolean, 'default': false },
+        sender:{type:String},
+        timestamp: { type: Date, 'default': Date.now },
+        notice:{},
+    }],
     isAdmin:{
         type:Boolean,
         default:true

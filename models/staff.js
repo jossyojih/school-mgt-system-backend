@@ -44,6 +44,10 @@ const staffSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    isStaff:{
+        type:Boolean,
+        default:true
+    },
     maritalStatus:{
         type:String,
     },
@@ -53,7 +57,11 @@ const staffSchema = new mongoose.Schema({
     calendar:{
         type:ObjectId,ref:"SchoolCalendar"
     },
-   
+    notification:[{
+        //sender:{type:ObjectId,ref:"User"},
+        timestamp:{type:String},
+        notice:{type:String},
+    }],
     students:[{type:ObjectId,ref:"Student"}],
    
 })
